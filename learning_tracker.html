@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mildred's Learning Tracker 🚀</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --brown: #3C1F0F;
+    --brown-mid: #6B3A22;
+    --cream: #F5EDD8;
+    --cream-dark: #EAD9BA;
+    --yellow: #E8B84B;
+    --yellow-soft: #F2D07A;
+    --forest: #1B4332;
+    --forest-mid: #2D6A4F;
+    --forest-light: #52B788;
+    --navy: #0D1F3C;
+    --navy-mid: #1A3558;
+    --white: #FDFAF4;
+    --text: #3C1F0F;
+    --muted: #9B7B5E;
+    --border: rgba(60,31,15,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(245,237,216,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-logo {
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--brown);
+  }
+  .nav-logo span { color: var(--yellow); }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--brown); }
+
+  /* HERO */
+  .hero {
+    background: var(--brown);
+    color: var(--cream);
+    padding: 100px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 400px;
+    background: radial-gradient(ellipse, rgba(232,184,75,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero h1 {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    margin-bottom: 12px;
+    line-height: 1.1;
+  }
+  .hero h1 span { color: var(--yellow); }
+
+  .hero p {
+    opacity: 0.7;
+    max-width: 480px;
+    margin: 0 auto 28px;
+    font-size: 1rem;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat {
+    text-align: center;
+  }
+  .hero-stat .num {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--yellow);
+    display: block;
+  }
+  .hero-stat .label {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* OVERALL PROGRESS */
+  .overall {
+    background: var(--white);
+    padding: 48px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .overall h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--brown);
+    margin-bottom: 32px;
+  }
+
+  .progress-tracks {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .track-progress {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+  }
+
+  .track-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .track-name {
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--brown);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .track-percent {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  .prog-bar {
+    height: 10px;
+    background: var(--cream-dark);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .prog-fill {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 1.5s ease;
+  }
+
+  .fill-kotlin { background: linear-gradient(90deg, #7C3AED, #A855F7); }
+  .fill-python { background: linear-gradient(90deg, #2563EB, #3B82F6); }
+  .fill-jetpack { background: linear-gradient(90deg, var(--forest), var(--forest-light)); }
+  .fill-uiux { background: linear-gradient(90deg, #DB2777, #EC4899); }
+  .fill-outreachy { background: linear-gradient(90deg, var(--yellow), var(--yellow-soft)); }
+
+  /* SECTIONS */
+  .section { padding: 60px 40px; max-width: 1000px; margin: 0 auto; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .section-emoji { font-size: 2.5rem; }
+
+  .section-title {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--brown);
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 40px;
+    margin-left: 0;
+  }
+
+  /* PHASE CARDS */
+  .phase {
+    margin-bottom: 32px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .phase-header {
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .phase-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .phase-num {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .phase-title-wrap h3 {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 2px;
+  }
+
+  .phase-title-wrap p {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.65);
+  }
+
+  .phase-toggle {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.7);
+    transition: transform 0.3s;
+  }
+
+  .phase.open .phase-toggle { transform: rotate(180deg); }
+
+  .phase-body {
+    background: var(--white);
+    display: none;
+    padding: 28px;
+  }
+
+  .phase.open .phase-body { display: block; }
+
+  /* LESSON ITEMS */
+  .lesson-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .lesson-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .lesson-item:hover {
+    border-color: var(--yellow);
+    background: rgba(232,184,75,0.05);
+  }
+
+  .lesson-item.completed {
+    border-color: var(--forest-light);
+    background: rgba(82,183,136,0.06);
+    opacity: 0.8;
+  }
+
+  .lesson-checkbox {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--cream-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.2s;
+    font-size: 0.8rem;
+  }
+
+  .lesson-item.completed .lesson-checkbox {
+    background: var(--forest-light);
+    border-color: var(--forest-light);
+    color: white;
+  }
+
+  .lesson-content { flex: 1; }
+
+  .lesson-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--brown);
+    margin-bottom: 4px;
+  }
+
+  .lesson-item.completed .lesson-title {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  .lesson-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .lesson-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .meta-tag {
+    font-size: 0.68rem;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .tag-time { background: rgba(13,31,60,0.08); color: var(--navy); }
+  .tag-build { background: rgba(27,67,50,0.08); color: var(--forest-mid); }
+  .tag-theory { background: rgba(232,184,75,0.15); color: var(--brown-mid); }
+  .tag-project { background: rgba(219,39,119,0.08); color: #DB2777; }
+
+  /* CODE SNIPPET */
+  .code-preview {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.78rem;
+    color: rgba(245,237,216,0.85);
+    line-height: 1.6;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .code-preview .kw { color: #A855F7; }
+  .code-preview .fn { color: #60A5FA; }
+  .code-preview .str { color: var(--yellow-soft); }
+  .code-preview .cm { color: rgba(255,255,255,0.35); }
+
+  /* DIVIDER */
+  .week-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 16px;
+  }
+
+  .week-divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .week-divider-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* KOTLIN PHASES */
+  .kotlin-1 .phase-header { background: #4C1D95; }
+  .kotlin-1 .phase-num { background: #7C3AED; }
+  .kotlin-2 .phase-header { background: #3730A3; }
+  .kotlin-2 .phase-num { background: #6366F1; }
+  .kotlin-3 .phase-header { background: #1E3A5F; }
+  .kotlin-3 .phase-num { background: #3B82F6; }
+  .kotlin-4 .phase-header { background: var(--forest); }
+  .kotlin-4 .phase-num { background: var(--forest-mid); }
+
+  /* PYTHON PHASES */
+  .python-1 .phase-header { background: #1E3A5F; }
+  .python-1 .phase-num { background: #2563EB; }
+  .python-2 .phase-header { background: #064E3B; }
+  .python-2 .phase-num { background: #059669; }
+  .python-3 .phase-header { background: #1F2937; }
+  .python-3 .phase-num { background: #374151; }
+
+  /* DAILY SCHEDULE */
+  .schedule {
+    background: var(--navy);
+    color: var(--cream);
+    padding: 60px 40px;
+  }
+
+  .schedule h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--yellow);
+    margin-bottom: 8px;
+  }
+
+  .schedule p {
+    text-align: center;
+    opacity: 0.6;
+    margin-bottom: 40px;
+  }
+
+  .schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .schedule-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.2s;
+  }
+
+  .schedule-card:hover {
+    border-color: rgba(232,184,75,0.3);
+    background: rgba(232,184,75,0.06);
+  }
+
+  .schedule-time {
+    font-size: 0.68rem;
+    color: var(--yellow-soft);
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .schedule-activity {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+
+  .schedule-detail {
+    font-size: 0.78rem;
+    color: rgba(245,237,216,0.5);
+    line-height: 1.5;
+  }
+
+  /* OUTREACHY SECTION */
+  .outreachy-section {
+    background: var(--forest);
+    color: var(--cream);
+    padding: 60px 40px;
+  }
+
+  .outreachy-section h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--yellow);
+    margin-bottom: 8px;
+  }
+
+  .outreachy-section > p {
+    text-align: center;
+    opacity: 0.65;
+    margin-bottom: 40px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .timeline {
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: rgba(255,255,255,0.1);
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .timeline-dot {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--yellow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .timeline-content {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 16px 20px;
+    flex: 1;
+  }
+
+  .timeline-month {
+    font-size: 0.68rem;
+    color: var(--yellow-soft);
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .timeline-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .timeline-tasks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .timeline-tasks li {
+    font-size: 0.82rem;
+    color: rgba(245,237,216,0.65);
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .timeline-tasks li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--yellow-soft);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--brown);
+    color: rgba(245,237,216,0.5);
+    text-align: center;
+    padding: 24px;
+    font-size: 0.85rem;
+  }
+
+  footer span { color: var(--yellow); }
+
+  /* MOTIVATIONAL BANNER */
+  .motivation {
+    background: var(--yellow);
+    padding: 20px 40px;
+    text-align: center;
+  }
+
+  .motivation p {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--brown);
+  }
+
+  @media (max-width: 600px) {
+    nav { padding: 12px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 80px 24px 40px; }
+    .section { padding: 40px 24px; }
+    .overall { padding: 40px 24px; }
+    .schedule { padding: 40px 24px; }
+    .outreachy-section { padding: 40px 24px; }
+    .phase-body { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Mildred<span>.</span>learns</div>
+  <ul class="nav-links">
+    <li><a href="#kotlin">Kotlin</a></li>
+    <li><a href="#python">Python</a></li>
+    <li><a href="#schedule">Schedule</a></li>
+    <li><a href="#outreachy">Outreachy</a></li>
+  </ul>
+</nav>
+
+<!-- MOTIVATION BANNER -->
+<div class="motivation">
+  <p>"I am alive. I am willing. I want change." — Say this every morning before you open any code.</p>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Mildred's <span>Learning</span> Tracker</h1>
+  <p>Step by step. One concept at a time. Late night sessions that change your life.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="num">2</span>
+      <span class="label">Languages</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num">6</span>
+      <span class="label">Months</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num">1hr+</span>
+      <span class="label">Per Day</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num">∞</span>
+      <span class="label">Possibilities</span>
+    </div>
+  </div>
+</div>
+
+<!-- OVERALL PROGRESS -->
+<div class="overall">
+  <h2>📊 Your Overall Progress</h2>
+  <div class="progress-tracks">
+    <div class="track-progress">
+      <div class="track-progress-header">
+        <div class="track-name">🟣 Kotlin</div>
+        <div class="track-percent" id="kotlin-pct">0%</div>
+      </div>
+      <div class="prog-bar"><div class="prog-fill fill-kotlin" id="kotlin-bar" style="width:0%"></div></div>
+    </div>
+    <div class="track-progress">
+      <div class="track-progress-header">
+        <div class="track-name">🔵 Python</div>
+        <div class="track-percent" id="python-pct">0%</div>
+      </div>
+      <div class="prog-bar"><div class="prog-fill fill-python" id="python-bar" style="width:0%"></div></div>
+    </div>
+    <div class="track-progress">
+      <div class="track-progress-header">
+        <div class="track-name">🟢 Jetpack Compose</div>
+        <div class="track-percent" id="jetpack-pct">0%</div>
+      </div>
+      <div class="prog-bar"><div class="prog-fill fill-jetpack" id="jetpack-bar" style="width:0%"></div></div>
+    </div>
+    <div class="track-progress">
+      <div class="track-progress-header">
+        <div class="track-name">🌸 UI/UX Design</div>
+        <div class="track-percent" id="uiux-pct">0%</div>
+      </div>
+      <div class="prog-bar"><div class="prog-fill fill-uiux" id="uiux-bar" style="width:0%"></div></div>
+    </div>
+    <div class="track-progress">
+      <div class="track-progress-header">
+        <div class="track-name">🌟 Outreachy Ready</div>
+        <div class="track-percent" id="out-pct">0%</div>
+      </div>
+      <div class="prog-bar"><div class="prog-fill fill-outreachy" id="out-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================KOTLIN SECTION=========================================== -->
+<div class="section" id="kotlin">
+  <div class="section-header">
+    <h2 class="section-title">Kotlin — Your Main Language</h2>
+  </div>
+  <p class="section-sub">This is the most important thing you are learning. Kotlin is what your job runs on. Take it seriously but take it slowly. One phase at a time.</p>
+
+  <!-- PHASE 1 -->
+  <div class="phase kotlin-1" id="phase-k1">
+    <div class="phase-header" onclick="togglePhase('phase-k1')">
+      <div class="phase-header-left">
+        <div class="phase-num">1</div>
+        <div class="phase-title-wrap">
+          <h3>Phase 1 — The Absolute Basics</h3>
+          <p>Weeks 1 & 2 · Foundation · Learn these before anything else</p>
+        </div>
+      </div>
+      <div class="phase-toggle">▼</div>
+    </div>
+    <div class="phase-body">
+      <div class="lesson-list">
+
+        <div class="week-divider"><div class="week-divider-line"></div><div class="week-divider-label">Week 1</div><div class="week-divider-line"></div></div>
+
+        <div class="lesson-item completed" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox">✓</div>
+          <div class="lesson-content">
+            <div class="lesson-title">Variables — val and var</div>
+            <div class="lesson-desc">val is a permanent box. var is a changeable box. You store things inside them. You already know this one!</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 15 mins</span>
+              <span class="meta-tag tag-theory">Theory</span>
+            </div>
+            <div class="code-preview">
+<span class="kw">val</span> name = <span class="str">"Mildred"</span> <span class="cm">// permanent — cannot change</span>
+<span class="kw">var</span> mood = <span class="str">"tired"</span> <span class="cm">// changeable</span>
+mood = <span class="str">"motivated"</span> <span class="cm">// this works!</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item completed" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox">✓</div>
+          <div class="lesson-content">
+            <div class="lesson-title">Data Types — String, Int, Boolean</div>
+            <div class="lesson-desc">String = words and sentences. Int = whole numbers. Boolean = true or false. That is it.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 20 mins</span>
+              <span class="meta-tag tag-theory">Theory</span>
+            </div>
+            <div class="code-preview">
+<span class="kw">val</span> name: String = <span class="str">"Mildred"</span>
+<span class="kw">val</span> age: Int = <span class="str">31</span>
+<span class="kw">val</span> isHappy: Boolean = <span class="str">true</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Functions — Writing Your Own</div>
+            <div class="lesson-desc">A function is like a recipe. You give it ingredients (parameters) and it gives you back something cooked (return value). Write 3 of your own today.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 30 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+            <div class="code-preview">
+<span class="kw">fun</span> <span class="fn">greet</span>(name: String): String {
+    <span class="kw">return</span> <span class="str">"Hello $name!"</span>
+}
+<span class="cm">// call it like this:</span>
+<span class="fn">greet</span>(<span class="str">"Mildred"</span>) <span class="cm">// returns "Hello Mildred!"</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">If Statements — Making Decisions</div>
+            <div class="lesson-desc">IF it is raining THEN take umbrella ELSE go without. Your app makes decisions this way every second.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 25 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+            <div class="code-preview">
+<span class="kw">val</span> isRaining = <span class="str">true</span>
+<span class="kw">if</span> (isRaining) {
+    println(<span class="str">"Take umbrella"</span>)
+} <span class="kw">else</span> {
+    println(<span class="str">"Go without"</span>)
+}
+            </div>
+          </div>
+        </div>
+
+        <div class="week-divider"><div class="week-divider-line"></div><div class="week-divider-label">Week 2</div><div class="week-divider-line"></div></div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Lists — Storing Many Things</div>
+            <div class="lesson-desc">Like a shopping list in code. Store many things together. Loop through them. Find things inside them.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 30 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+            <div class="code-preview">
+<span class="kw">val</span> cities = listOf(<span class="str">"Bamenda"</span>, <span class="str">"Douala"</span>, <span class="str">"Yaoundé"</span>)
+cities.<span class="fn">forEach</span> { city ->
+    println(<span class="str">"I want to visit $city"</span>)
+}
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">When Expression — Better If Statements</div>
+            <div class="lesson-desc">When is like a smarter if. When you have many choices it is cleaner than writing if else if else if else forever.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 20 mins</span>
+              <span class="meta-tag tag-theory">Theory</span>
+            </div>
+            <div class="code-preview">
+<span class="kw">val</span> day = <span class="str">"Monday"</span>
+<span class="kw">when</span> (day) {
+    <span class="str">"Monday"</span> -> println(<span class="str">"Start of week "</span>)
+    <span class="str">"Friday"</span> -> println(<span class="str">"Almost weekend! "</span>)
+    <span class="kw">else</span> -> println(<span class="str">"Just another day"</span>)
+}
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Classes — Describing Things</div>
+            <div class="lesson-desc">A class is a blueprint. Like a cookie cutter. You make the shape once then cut many cookies from it. Every Android screen uses classes.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 40 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+            <div class="code-preview">
+<span class="kw">class</span> Person(
+    <span class="kw">val</span> name: String,
+    <span class="kw">val</span> age: Int
+) {
+    <span class="kw">fun</span> <span class="fn">introduce</span>() {
+        println(<span class="str">"Hi I am $name, $age years old"</span>)
+    }
+}
+<span class="kw">val</span> mildred = Person(<span class="str">"Mildred"</span>, <span class="str">31</span>)
+mildred.<span class="fn">introduce</span>()
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title"> Mini Project — Build a Contact Card</div>
+            <div class="lesson-desc">Using everything from Phase 1 — build a simple Contact class with name, phone, and a function that prints their info. No help. Just try.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 45 mins</span>
+              <span class="meta-tag tag-project">Project</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase kotlin-2" id="phase-k2">
+    <div class="phase-header" onclick="togglePhase('phase-k2')">
+      <div class="phase-header-left">
+        <div class="phase-num">2</div>
+        <div class="phase-title-wrap">
+          <h3>Phase 2 — Jetpack Compose Layouts</h3>
+          <p>Weeks 3 & 4 · Build screens · This is your job now</p>
+        </div>
+      </div>
+      <div class="phase-toggle">▼</div>
+    </div>
+    <div class="phase-body">
+      <div class="lesson-list">
+
+        <div class="week-divider"><div class="week-divider-line"></div><div class="week-divider-label">Week 3</div><div class="week-divider-line"></div></div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="jetpack">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Column — Stack Things Top to Bottom</div>
+            <div class="lesson-desc">Column stacks things like a list going downward. Like writing items on a piece of paper top to bottom.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 20 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+            <div class="code-preview">
+<span class="fn">Column</span> {
+    <span class="fn">Text</span>(<span class="str">"First"</span>)
+    <span class="fn">Text</span>(<span class="str">"Second"</span>)
+    <span class="fn">Text</span>(<span class="str">"Third"</span>)
+} <span class="cm">// shows top to bottom</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="jetpack">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Row — Put Things Side by Side</div>
+            <div class="lesson-desc">Row puts things next to each other horizontally. Like buttons sitting in a row.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 20 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+            <div class="code-preview">
+<span class="fn">Row</span> {
+    <span class="fn">Text</span>(<span class="str">"Left"</span>)
+    <span class="fn">Text</span>(<span class="str">"Right"</span>)
+} <span class="cm">// shows side by side</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="jetpack">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Modifier — Dress Your Components</div>
+            <div class="lesson-desc">Modifier is like clothing for your UI. It makes things bigger, smaller, padded, colored, clickable. Everything visual goes through Modifier.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 30 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+            <div class="code-preview">
+<span class="fn">Text</span>(
+    text = <span class="str">"Hello"</span>,
+    modifier = Modifier
+        .<span class="fn">padding</span>(<span class="str">16.dp</span>)
+        .<span class="fn">fillMaxWidth</span>()
+        .<span class="fn">background</span>(Color.Yellow)
+)
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="jetpack">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Text, Button, Image — The Big Three</div>
+            <div class="lesson-desc">These three components make up 80% of every screen you will ever build. Learn them deeply. Practice combining them.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 40 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="week-divider"><div class="week-divider-line"></div><div class="week-divider-label">Week 4</div><div class="week-divider-line"></div></div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="jetpack">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">remember and mutableStateOf</div>
+            <div class="lesson-desc">Your phone forgets everything when it repaints. remember makes it NOT forget. mutableStateOf tells the screen to repaint when the value changes.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 45 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+            <div class="code-preview">
+<span class="kw">var</span> count <span class="kw">by</span> <span class="fn">remember</span> { <span class="fn">mutableStateOf</span>(<span class="str">0</span>) }
+<span class="fn">Button</span>(onClick = { count++ }) {
+    <span class="fn">Text</span>(<span class="str">"Clicked $count times"</span>)
+}
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="jetpack">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">TextField — Let Users Type</div>
+            <div class="lesson-desc">The input box. Every search bar, every message box, every form field is a TextField. Learn to capture what users type.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 35 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="jetpack">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title"> Mini Project — Profile Screen</div>
+            <div class="lesson-desc">Build a complete profile screen with a name, a bio, a button that changes mood, and a text field. No help. Use everything from Phase 2.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 60 mins</span>
+              <span class="meta-tag tag-project">Project</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase kotlin-3" id="phase-k3">
+    <div class="phase-header" onclick="togglePhase('phase-k3')">
+      <div class="phase-header-left">
+        <div class="phase-num">3</div>
+        <div class="phase-title-wrap">
+          <h3>Phase 3 — Real App Logic</h3>
+          <p>Weeks 5 & 6 · Make things actually work · ViewModel + Navigation</p>
+        </div>
+      </div>
+      <div class="phase-toggle">▼</div>
+    </div>
+    <div class="phase-body">
+      <div class="lesson-list">
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">ViewModel — The Manager</div>
+            <div class="lesson-desc">ViewModel is like a manager between your screen and your data. Screen asks manager for data. Manager gets it. Screen displays it. They never talk directly.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 50 mins</span>
+              <span class="meta-tag tag-theory">Theory + Build</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Navigation — Moving Between Screens</div>
+            <div class="lesson-desc">How you go from screen A to screen B. Like turning pages in a book. Every app needs this.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 45 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">LazyColumn — Scrollable Lists</div>
+            <div class="lesson-desc">When you have many items — like a list of messages — you use LazyColumn. It only loads what is visible so the app stays fast.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 40 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title"> Project — Messages List Screen</div>
+            <div class="lesson-desc">Build a screen that looks like a messages list. Profile photo placeholder, name, last message, time. Make it scrollable. This is your Google Messages prep.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 90 mins</span>
+              <span class="meta-tag tag-project">Project</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase kotlin-4" id="phase-k4">
+    <div class="phase-header" onclick="togglePhase('phase-k4')">
+      <div class="phase-header-left">
+        <div class="phase-num">4</div>
+        <div class="phase-title-wrap">
+          <h3>Phase 4 — DekuSMS Like Google Messages</h3>
+          <p>Weeks 7 & 8 · Apply everything · Real job work</p>
+        </div>
+      </div>
+      <div class="phase-toggle">▼</div>
+    </div>
+    <div class="phase-body">
+      <div class="lesson-list">
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Study Google Messages UI</div>
+            <div class="lesson-desc">Screenshot every single screen in Google Messages. Colors, fonts, spacing, icons, animations. Document everything you see. This is research — it counts as work.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 60 mins</span>
+              <span class="meta-tag tag-theory">Research</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Open 5 GitHub Issues for DekuSMS UI</div>
+            <div class="lesson-desc">Compare DekuSMS to Google Messages. Find 5 differences. Open one issue per difference on GitHub. Tag your boss. This shows initiative.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 45 mins</span>
+              <span class="meta-tag tag-project">Work</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Fix First UI Issue in DekuSMS</div>
+            <div class="lesson-desc">Pick the smallest issue you opened. Find the file. Make the change. Open a PR. This is your first real feature contribution.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 120 mins</span>
+              <span class="meta-tag tag-project">Real Work</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="kotlin">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title"> Final Project — Replicate One Google Messages Screen</div>
+            <div class="lesson-desc">Pick the conversation list screen from Google Messages. Build an exact replica using Jetpack Compose. Show it to your boss. This is your proof of growth.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 3 hours</span>
+              <span class="meta-tag tag-project">Capstone</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PYTHON SECTION -->
+<div style="background: var(--cream-dark); padding: 1px 0;">
+<div class="section" id="python">
+  <div class="section-header">
+    <h2 class="section-title">Python — For Outreachy & Beyond</h2>
+  </div>
+  <p class="section-sub">Start Python after Phase 2 of Kotlin. Python is easier than Kotlin so it will feel like a breath of fresh air. Many Outreachy projects use Python.</p>
+
+  <!-- PYTHON PHASE 1 -->
+  <div class="phase python-1" id="phase-p1">
+    <div class="phase-header" onclick="togglePhase('phase-p1')">
+      <div class="phase-header-left">
+        <div class="phase-num">1</div>
+        <div class="phase-title-wrap">
+          <h3>Phase 1 — Python Basics</h3>
+          <p>Weeks 1 & 2 · Surprisingly easy after Kotlin</p>
+        </div>
+      </div>
+      <div class="phase-toggle">▼</div>
+    </div>
+    <div class="phase-body">
+      <div class="lesson-list">
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="python">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Variables and Data Types</div>
+            <div class="lesson-desc">Same concept as Kotlin but simpler. No val or var. No type declarations. Python figures it out for you.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 20 mins</span>
+              <span class="meta-tag tag-theory">Theory</span>
+            </div>
+            <div class="code-preview">
+name = <span class="str">"Mildred"</span>  <span class="cm"># Python just knows it's a string</span>
+age = <span class="str">31</span>         <span class="cm"># Python just knows it's a number</span>
+is_happy = <span class="str">True</span>  <span class="cm"># True with capital T in Python</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="python">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Functions in Python</div>
+            <div class="lesson-desc">Same idea as Kotlin functions but with def instead of fun. Much simpler syntax.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 25 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+            <div class="code-preview">
+<span class="kw">def</span> <span class="fn">greet</span>(name):
+    <span class="kw">return</span> <span class="str">f"Hello {name}!"</span>
+
+<span class="fn">greet</span>(<span class="str">"Mildred"</span>)  <span class="cm"># returns "Hello Mildred!"</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="python">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Lists and Loops</div>
+            <div class="lesson-desc">Same as Kotlin lists but even simpler. Loop through them with for. This is the heart of Python scripting.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 30 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="python">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Reading and Writing Files</div>
+            <div class="lesson-desc">Python is amazing at working with files. Open a file, read it, write to it, close it. Very useful for Outreachy projects.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 35 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PYTHON PHASE 2 -->
+  <div class="phase python-2" id="phase-p2">
+    <div class="phase-header" onclick="togglePhase('phase-p2')">
+      <div class="phase-header-left">
+        <div class="phase-num">2</div>
+        <div class="phase-title-wrap">
+          <h3>Phase 2 — Python for Real Projects</h3>
+          <p>Weeks 3 & 4 · Scripts, APIs, automation</p>
+        </div>
+      </div>
+      <div class="phase-toggle">▼</div>
+    </div>
+    <div class="phase-body">
+      <div class="lesson-list">
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="python">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Classes in Python</div>
+            <div class="lesson-desc">Same blueprint concept as Kotlin. Build objects with data and functions inside them.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 40 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="python">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Working with APIs using requests</div>
+            <div class="lesson-desc">Python can talk to the internet. Ask a website for data and get it back. This is how real apps talk to servers.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 50 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="python">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title"> Project — Build a Simple Script</div>
+            <div class="lesson-desc">Build a Python script that reads a list of names from a file, says hello to each one, and saves the results to a new file. Real, useful, small.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 60 mins</span>
+              <span class="meta-tag tag-project">Project</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PYTHON PHASE 3 -->
+  <div class="phase python-3" id="phase-p3">
+    <div class="phase-header" onclick="togglePhase('phase-p3')">
+      <div class="phase-header-left">
+        <div class="phase-num">3</div>
+        <div class="phase-title-wrap">
+          <h3>Phase 3 — Python for Outreachy</h3>
+          <p>Weeks 5 & 6 · Contribute to real projects</p>
+        </div>
+      </div>
+      <div class="phase-toggle">▼</div>
+    </div>
+    <div class="phase-body">
+      <div class="lesson-list">
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="python">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Reading Open Source Python Code</div>
+            <div class="lesson-desc">Find a small open source Python project on GitHub. Read the code. Understand what it does. Find one small thing to improve.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 60 mins</span>
+              <span class="meta-tag tag-theory">Research</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="python">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Writing Tests in Python</div>
+            <div class="lesson-desc">Same idea as Android instrumentation tests but simpler. Python uses pytest. Writing tests for Python projects makes you a very strong Outreachy candidate.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 50 mins</span>
+              <span class="meta-tag tag-build">Build</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item" onclick="toggleLesson(this)" data-track="python">
+          <div class="lesson-checkbox"></div>
+          <div class="lesson-content">
+            <div class="lesson-title">Make Your First Python Open Source PR</div>
+            <div class="lesson-desc">Find a Python project with beginner issues. Fix one. Open a PR. This is Outreachy contribution practice. Do it before the application opens.</div>
+            <div class="lesson-meta">
+              <span class="meta-tag tag-time">⏱ 90 mins</span>
+              <span class="meta-tag tag-project">Outreachy Prep</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- DAILY SCHEDULE -->
+<div class="schedule" id="schedule">
+  <h2>Your Late Night Schedule</h2>
+  <p>You learn best late at night. Here is exactly how to spend that time.</p>
+  <div class="schedule-grid">
+    <div class="schedule-card">
+      <div class="schedule-time">First 15 mins</div>
+      <div class="schedule-activity">Review Yesterday</div>
+      <div class="schedule-detail">Open your code from yesterday. Read it. Can you explain what it does? Good. Move on.</div>
+    </div>
+    <div class="schedule-card">
+      <div class="schedule-time">Next 30 mins</div>
+      <div class="schedule-activity">Learn One Concept</div>
+      <div class="schedule-detail">Open this tracker. Find the next unchecked lesson. Read it. Understand it. Ask Claude if confused.</div>
+    </div>
+    <div class="schedule-card">
+      <div class="schedule-time">Next 30 mins</div>
+      <div class="schedule-activity">Build Something</div>
+      <div class="schedule-detail">Write real code using what you just learned. Even 10 lines. Run it. See it work. Tick the checkbox.</div>
+    </div>
+    <div class="schedule-card">
+      <div class="schedule-time">Last 15 mins</div>
+      <div class="schedule-activity">Commit & Apply</div>
+      <div class="schedule-detail">Push your work to GitHub. Then apply to one job on Upwork. Even if you feel tired. Do it anyway.</div>
+    </div>
+  </div>
+</div>
+
+<!-- OUTREACHY TIMELINE -->
+<div class="outreachy-section" id="outreachy">
+  <h2> Outreachy Preparation Timeline</h2>
+  <p>$7,000 USD internship. You can get this. Here is the plan.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-month">June 2025 — NOW</div>
+        <div class="timeline-title">Build Your Foundation</div>
+        <ul class="timeline-tasks">
+          <li>Keep writing tests and opening PRs at work</li>
+          <li>Start Kotlin Phase 1 and 2</li>
+          <li>Read 5 past Outreachy intern blogs</li>
+          <li>Study the Outreachy website thoroughly</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-month">July 2025</div>
+        <div class="timeline-title">Prepare Your Application</div>
+        <ul class="timeline-tasks">
+          <li>Draft your initial application essays with Claude</li>
+          <li>Identify 3 projects you could contribute to</li>
+          <li>Polish your GitHub profile and portfolio</li>
+          <li>Aim for 10+ merged PRs total</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-month">August 2025</div>
+        <div class="timeline-title">Apply and Contribute</div>
+        <ul class="timeline-tasks">
+          <li>Submit initial application on day one it opens</li>
+          <li>Pick your project and contribute immediately</li>
+          <li>Talk to mentors every single day</li>
+          <li>Open at least one PR every 2 days</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-month">December 2025</div>
+        <div class="timeline-title">Internship Begins — $7,000 USD</div>
+        <ul class="timeline-tasks">
+          <li>3 month paid internship</li>
+          <li>Work with a mentor on a real open source project</li>
+          <li>Get paid $7,000 USD — about 4.2 million CFA</li>
+          <li>Change your life completely</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>Built for <span>Mildred Fonka</span> — Late night learner, open source contributor, future Outreachy intern.</p>
+  <p style="margin-top:8px; font-size:0.75rem;">Tick each lesson as you complete it. Your progress saves automatically in this browser.</p>
+</footer>
+
+<script>
+  // Toggle phase open/close
+  function togglePhase(id) {
+    const phase = document.getElementById(id);
+    phase.classList.toggle('open');
+  }
+
+  // Open first phases by default
+  document.getElementById('phase-k1').classList.add('open');
+
+  // Toggle lesson complete
+  function toggleLesson(el) {
+    el.classList.toggle('completed');
+    if (el.classList.contains('completed')) {
+      el.querySelector('.lesson-checkbox').textContent = '✓';
+    } else {
+      el.querySelector('.lesson-checkbox').textContent = '';
+    }
+    saveProgress();
+    updateProgress();
+  }
+
+  // Save to localStorage
+  function saveProgress() {
+    const lessons = document.querySelectorAll('.lesson-item');
+    const state = [];
+    lessons.forEach((l, i) => {
+      state.push(l.classList.contains('completed'));
+    });
+    try {
+      localStorage.setItem('mildred-progress', JSON.stringify(state));
+    } catch(e) {}
+  }
+
+  // Load from localStorage
+  function loadProgress() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('mildred-progress') || '[]');
+      const lessons = document.querySelectorAll('.lesson-item');
+      lessons.forEach((l, i) => {
+        if (saved[i]) {
+          l.classList.add('completed');
+          l.querySelector('.lesson-checkbox').textContent = '✓';
+        }
+      });
+    } catch(e) {}
+    updateProgress();
+  }
+
+  // Update progress bars
+  function updateProgress() {
+    const tracks = {
+      kotlin: { total: 0, done: 0, bar: 'kotlin-bar', pct: 'kotlin-pct' },
+      python: { total: 0, done: 0, bar: 'python-bar', pct: 'python-pct' },
+      jetpack: { total: 0, done: 0, bar: 'jetpack-bar', pct: 'jetpack-pct' },
+    };
+
+    document.querySelectorAll('.lesson-item[data-track]').forEach(l => {
+      const track = l.dataset.track;
+      if (tracks[track]) {
+        tracks[track].total++;
+        if (l.classList.contains('completed')) tracks[track].done++;
+      }
+    });
+
+    Object.entries(tracks).forEach(([track, data]) => {
+      const pct = data.total > 0 ? Math.round((data.done / data.total) * 100) : 0;
+      const bar = document.getElementById(data.bar);
+      const pctEl = document.getElementById(data.pct);
+      if (bar) bar.style.width = pct + '%';
+      if (pctEl) pctEl.textContent = pct + '%';
+    });
+
+    // Jetpack same as kotlin phases 2+
+    const jetpackItems = document.querySelectorAll('.lesson-item[data-track="jetpack"]');
+    const jetpackDone = Array.from(jetpackItems).filter(l => l.classList.contains('completed')).length;
+    const jetpackPct = jetpackItems.length > 0 ? Math.round((jetpackDone / jetpackItems.length) * 100) : 0;
+    const jbar = document.getElementById('jetpack-bar');
+    const jpct = document.getElementById('jetpack-pct');
+    if (jbar) jbar.style.width = jetpackPct + '%';
+    if (jpct) jpct.textContent = jetpackPct + '%';
+
+    // Outreachy = overall all tracks
+    const allItems = document.querySelectorAll('.lesson-item');
+    const allDone = Array.from(allItems).filter(l => l.classList.contains('completed')).length;
+    const allPct = allItems.length > 0 ? Math.round((allDone / allItems.length) * 100) : 0;
+    const obar = document.getElementById('out-bar');
+    const opct = document.getElementById('out-pct');
+    if (obar) obar.style.width = allPct + '%';
+    if (opct) opct.textContent = allPct + '%';
+  }
+
+  // Load on start
+  loadProgress();
+</script>
+
+</body>
+</html>
