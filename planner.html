@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mama Rise — Life Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #FAF8F3;
+    --surface: #FFFFFF;
+    --surface2: #F4F1EA;
+    --border: #E8E3D8;
+    --border2: #D4CCBB;
+    --ink: #1C1A16;
+    --ink2: #6B6557;
+    --ink3: #9C9485;
+    --accent: #2D5016;
+    --accent-light: #E8F0DE;
+    --accent-mid: #5A8A30;
+    --gold: #C8890A;
+    --gold-light: #FDF3DC;
+    --rose: #8C2F2F;
+    --rose-light: #FAEAEA;
+    --blue: #1A3A6B;
+    --blue-light: #E8EFF9;
+    --teal: #0F5E5A;
+    --teal-light: #E0F4F3;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 16px rgba(28,26,22,0.08);
+    --shadow-lg: 0 8px 40px rgba(28,26,22,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 240px;
+    height: 100vh;
+    background: var(--ink);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .sidebar-brand {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .brand-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+  }
+  .brand-sub {
+    font-size: 11px;
+    opacity: 0.4;
+    margin-top: 3px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .sidebar-date {
+    padding: 14px 24px;
+    font-size: 12px;
+    opacity: 0.5;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .nav-section {
+    padding: 14px 12px 6px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.35;
+    font-weight: 600;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    margin: 1px 8px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    transition: all 0.15s;
+    border: none;
+    background: none;
+    width: calc(100% - 16px);
+    text-align: left;
+  }
+  .nav-item i { font-size: 17px; flex-shrink: 0; }
+  .nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+  .nav-item.active { background: rgba(255,255,255,0.12); color: #fff; font-weight: 500; }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 12px;
+    opacity: 0.35;
+    line-height: 1.5;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: 240px;
+    min-height: 100vh;
+    padding: 36px 40px;
+    max-width: 900px;
+  }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .page-header {
+    margin-bottom: 28px;
+  }
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--ink2);
+    margin-top: 5px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink);
+  }
+  .card-title i { font-size: 18px; color: var(--ink2); }
+
+  /* ── STAT GRID ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+  }
+  .stat-label { font-size: 11px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+  .stat-value { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1; }
+  .stat-unit { font-size: 11px; color: var(--ink3); margin-top: 3px; }
+  .c-green { color: var(--accent); }
+  .c-red { color: var(--rose); }
+  .c-gold { color: var(--gold); }
+  .c-blue { color: var(--blue); }
+
+  /* ── PROGRESS BAR ── */
+  .prog-bar { background: var(--surface2); border-radius: 99px; height: 8px; overflow: hidden; }
+  .prog-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+  .fill-green { background: var(--accent-mid); }
+  .fill-gold { background: var(--gold); }
+  .fill-red { background: var(--rose); }
+
+  /* ── TAGS / BADGES ── */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .badge-fixed { background: var(--blue-light); color: var(--blue); }
+  .badge-planned { background: var(--accent-light); color: var(--accent); }
+  .badge-unplanned { background: var(--gold-light); color: var(--gold); }
+  .badge-emergency { background: var(--rose-light); color: var(--rose); }
+  .badge-emotional { background: #F5E8F8; color: #6A2B8A; }
+  .badge-saving { background: var(--teal-light); color: var(--teal); }
+
+  /* ── TABLE ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .data-table th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink3); padding: 0 0 10px; border-bottom: 1px solid var(--border); font-weight: 500; }
+  .data-table td { padding: 12px 0; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .right { text-align: right; }
+  .data-table .total-row td { font-weight: 600; padding-top: 16px; border-bottom: none; border-top: 1px solid var(--border2); }
+
+  /* ── INPUTS ── */
+  .form-grid { display: grid; gap: 12px; margin-bottom: 14px; }
+  .form-grid.cols2 { grid-template-columns: 1fr 1fr; }
+  .form-grid.cols3 { grid-template-columns: 2fr 1fr 1fr; }
+  .form-grid.cols4 { grid-template-columns: 2fr 1fr 1fr 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink3); font-weight: 500; }
+
+  input[type=text], input[type=number], select, textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    background: var(--surface);
+    color: var(--ink);
+    transition: border-color 0.15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-mid);
+  }
+  textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn:hover { background: var(--surface2); border-color: var(--border2); }
+  .btn-primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .btn-primary:hover { background: #2d2b26; }
+  .btn-danger { color: var(--rose); border-color: var(--rose-light); }
+  .btn-danger:hover { background: var(--rose-light); }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+  .btn-icon { padding: 6px 8px; min-width: unset; }
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 10px;
+  }
+  .callout i { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .callout-green { background: var(--accent-light); color: #2A4E0D; border-left: 3px solid var(--accent-mid); }
+  .callout-gold { background: var(--gold-light); color: #6B4A05; border-left: 3px solid var(--gold); }
+  .callout-red { background: var(--rose-light); color: #6B1F1F; border-left: 3px solid var(--rose); }
+  .callout-blue { background: var(--blue-light); color: #0D2650; border-left: 3px solid var(--blue); }
+  .callout-teal { background: var(--teal-light); color: #073D3B; border-left: 3px solid var(--teal); }
+
+  /* ── ROW ITEMS ── */
+  .list-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .list-row:last-child { border-bottom: none; }
+  .list-row-main { flex: 1; min-width: 0; }
+  .list-row-title { font-size: 14px; }
+  .list-row-sub { font-size: 12px; color: var(--ink3); margin-top: 1px; }
+  .list-row-amt { font-size: 15px; font-weight: 600; white-space: nowrap; }
+
+  /* ── CHECKBOX ── */
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .check-item:last-child { border-bottom: none; }
+  .checkmark {
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--border2);
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .checkmark.checked { background: var(--accent); border-color: var(--accent); }
+  .checkmark.checked::after { content: ''; width: 5px; height: 9px; border: 2px solid #fff; border-top: none; border-left: none; transform: rotate(45deg) translateY(-1px); display: block; }
+  .check-label { font-size: 14px; line-height: 1.4; }
+  .check-label.done { text-decoration: line-through; color: var(--ink3); }
+
+  /* ── WEEK GRID ── */
+  .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .day-cell {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 10px 8px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+  }
+  .day-cell.today { background: var(--ink); color: #fff; }
+  .day-cell.done-day { background: var(--accent-light); border-color: var(--accent-mid); }
+  .day-name { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 4px; }
+  .day-check { font-size: 16px; }
+
+  /* ── GROWTH ITEM ── */
+  .growth-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .growth-item:last-child { border-bottom: none; }
+  .growth-icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px;
+  }
+  .growth-body { flex: 1; }
+  .growth-title { font-weight: 600; font-size: 14px; }
+  .growth-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; margin-top: 4px; }
+
+  /* ── MEAL BLOCK ── */
+  .meal-block {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .meal-name { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--ink3); font-weight: 500; margin-bottom: 6px; }
+  .meal-content { font-size: 14px; line-height: 1.6; }
+
+  /* ── ROADMAP ── */
+  .roadmap-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .roadmap-item:last-child { border-bottom: none; }
+  .step-num {
+    width: 32px; height: 32px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* ── NOTE CARD ── */
+  .note-item {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .note-meta { font-size: 11px; color: var(--ink3); margin-bottom: 6px; }
+  .note-body { font-size: 14px; line-height: 1.6; padding-right: 24px; }
+  .note-del { position: absolute; top: 10px; right: 10px; background: none; border: none; cursor: pointer; color: var(--ink3); font-size: 16px; }
+  .note-del:hover { color: var(--rose); }
+
+  /* ── AFFIRMATION ── */
+  .affirmation-box {
+    background: var(--ink);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 28px 30px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .affirmation-box:hover { transform: scale(1.005); }
+  .affirmation-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    line-height: 1.4;
+    font-style: italic;
+    opacity: 0.95;
+  }
+  .affirmation-hint { font-size: 12px; opacity: 0.35; margin-top: 12px; }
+
+  /* ── ADD FORM PANEL ── */
+  .add-panel {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 18px;
+    margin-top: 14px;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--ink3);
+    font-weight: 600;
+    margin: 20px 0 10px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+  /* ── TOTAL ROW ── */
+  .total-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--border2);
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  /* ── MOBILE HAMBURGER ── */
+  .hamburger {
+    display: none;
+    position: fixed;
+    top: 14px; left: 14px;
+    z-index: 200;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 99;
+  }
+
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); transition: transform 0.25s; }
+    .sidebar.open { transform: translateX(0); }
+    .overlay.open { display: block; }
+    .main { margin-left: 0; padding: 20px 16px 16px; padding-top: 64px; }
+    .hamburger { display: block; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .form-grid.cols3 { grid-template-columns: 1fr 1fr; }
+    .form-grid.cols4 { grid-template-columns: 1fr 1fr; }
+    .week-grid { grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .page.active .card { animation: fadeUp 0.3s ease forwards; }
+  .page.active .stat-card { animation: fadeUp 0.25s ease forwards; }
+</style>
+</head>
+<body>
+
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Mama Rise</div>
+    <div class="brand-sub">your life, planned</div>
+  </div>
+  <div class="sidebar-date" id="sidebarDate"></div>
+
+  <div class="nav-section">Finance</div>
+  <button class="nav-item active" onclick="showPage('budget', this)"><i class="ti ti-wallet"></i>Budget</button>
+  <button class="nav-item" onclick="showPage('daily', this)"><i class="ti ti-clock"></i>Daily Log</button>
+  <button class="nav-item" onclick="showPage('weekly', this)"><i class="ti ti-calendar-week"></i>Weekly Plan</button>
+
+  <div class="nav-section">Life</div>
+  <button class="nav-item" onclick="showPage('notes', this)"><i class="ti ti-pencil"></i>Notes & Feelings</button>
+  <button class="nav-item" onclick="showPage('growth', this)"><i class="ti ti-plant"></i>Personal Growth</button>
+  <button class="nav-item" onclick="showPage('skills', this)"><i class="ti ti-code"></i>Skills / Learning</button>
+
+  <div class="nav-section">Family</div>
+  <button class="nav-item" onclick="showPage('child', this)"><i class="ti ti-heart"></i>My Child</button>
+  <button class="nav-item" onclick="showPage('parenting', this)"><i class="ti ti-star"></i>Parenting</button>
+
+  <div class="sidebar-bottom">
+    Saved in your browser.<br>Your data stays on your phone.
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- ═══════════════════════════════════ BUDGET ═══════════════════════════════════ -->
+  <div class="page active" id="page-budget">
+    <div class="page-header">
+      <div class="page-title">Monthly Budget</div>
+      <div class="page-subtitle">200,000 FCFA salary · Bamenda</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">Monthly income</div>
+        <div class="stat-value">200,000</div>
+        <div class="stat-unit">FCFA</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Fixed expenses</div>
+        <div class="stat-value c-red">141,375</div>
+        <div class="stat-unit">FCFA / month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Left to manage</div>
+        <div class="stat-value c-green" id="statFree">58,625</div>
+        <div class="stat-unit">FCFA</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Extra spent</div>
+        <div class="stat-value c-gold" id="statExtra">0</div>
+        <div class="stat-unit">FCFA this month</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-bar"></i>Budget health</div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
+        <span>Total used of 200,000 FCFA</span>
+        <span id="budgetPctLabel">71%</span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill fill-gold" id="budgetBar" style="width:71%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin-top:6px;">
+        <span>0</span><span style="color:var(--accent)">safe zone &lt; 80%</span><span>200,000</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-lock"></i>Fixed monthly expenses</div>
+      <table class="data-table">
+        <thead><tr><th>Item</th><th>Type</th><th class="right">Amount (FCFA)</th></tr></thead>
+        <tbody>
+          <tr><td>Rent</td><td><span class="badge badge-fixed">fixed</span></td><td class="right">30,000</td></tr>
+          <tr><td>Gas</td><td><span class="badge badge-fixed">fixed</span></td><td class="right">9,000</td></tr>
+          <tr><td>Light / Water bill</td><td><span class="badge badge-fixed">fixed</span></td><td class="right">7,000</td></tr>
+          <tr><td>Food & feeding</td><td><span class="badge badge-fixed">fixed</span></td><td class="right">50,000</td></tr>
+          <tr><td>Njangi</td><td><span class="badge badge-fixed">fixed</span></td><td class="right">25,375</td></tr>
+          <tr><td>Internet</td><td><span class="badge badge-fixed">fixed</span></td><td class="right">20,000</td></tr>
+        </tbody>
+        <tfoot><tr class="total-row"><td colspan="2"><strong>Total fixed</strong></td><td class="right"><strong>141,375</strong></td></tr></tfoot>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-pig-money"></i>How to split your 58,625 FCFA</div>
+      <div class="callout callout-green"><i class="ti ti-leaf"></i><div><strong>Save 20,000 FCFA first.</strong> Before spending anything, put 20,000 on mobile money in a separate account named "Future Me." What you don't see, you don't spend.</div></div>
+      <div class="callout callout-blue"><i class="ti ti-home"></i><div><strong>House fund: 25,000 FCFA/month.</strong> Bed + frame (50,000–80,000) → 2–3 months. Gas plate (20,000) → 1 month. Carpet (15,000) → 1 month. Fridge (140,000) → 5–6 months. Do one at a time — bed first.</div></div>
+      <div class="callout callout-gold"><i class="ti ti-shield"></i><div><strong>Emergency buffer: 13,625 FCFA.</strong> This stays in your pocket. Only for real emergencies: illness, broken phone for work, unexpected bill. Not for snacks, not for credit.</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-receipt"></i>Extra expenses this month</div>
+      <div class="callout callout-gold"><i class="ti ti-alert-triangle"></i><div><strong>24-hour rule:</strong> Before any unplanned purchase, wait 24 hours. Ask yourself: "Will I still want this tomorrow? Does my son need this more?" Most of the time the urge passes.</div></div>
+      <div class="add-panel">
+        <div class="form-grid cols4">
+          <div class="form-group"><label class="form-label">What did you buy?</label><input type="text" id="expName" placeholder="bread, transport, credit..."></div>
+          <div class="form-group"><label class="form-label">Amount (FCFA)</label><input type="number" id="expAmt" placeholder="500"></div>
+          <div class="form-group"><label class="form-label">Type</label>
+            <select id="expType">
+              <option value="planned">planned</option>
+              <option value="unplanned">unplanned</option>
+              <option value="emergency">emergency</option>
+              <option value="emotional">emotional buy</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">&nbsp;</label><button class="btn btn-primary" style="width:100%" onclick="addExpense()"><i class="ti ti-plus"></i>Add</button></div>
+        </div>
+      </div>
+      <div id="expenseList" style="margin-top:4px;"></div>
+      <div class="total-line"><span>Total extra this month</span><span id="totalExtraLabel">0 FCFA</span></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ DAILY LOG ═══════════════════════════════════ -->
+  <div class="page" id="page-daily">
+    <div class="page-header">
+      <div class="page-title">Daily Spending Log</div>
+      <div class="page-subtitle">Track every franc — even the small ones add up</div>
+    </div>
+
+    <div class="callout callout-green"><i class="ti ti-bulb"></i><div>Your daily budget guide: from 58,625 free FCFA, after saving 20,000 and house fund 25,000 → you have about <strong>13,625 FCFA / month = ~450 FCFA / day</strong> for true extras. Small daily spends (charcoal, transport, credit) eat this fast. Log everything.</div></div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-clock"></i>Log a spend</div>
+      <div class="add-panel">
+        <div class="form-grid cols4">
+          <div class="form-group"><label class="form-label">Item</label><input type="text" id="dailyItem" placeholder="e.g. beignets, transport"></div>
+          <div class="form-group"><label class="form-label">Amount (FCFA)</label><input type="number" id="dailyAmt" placeholder="200"></div>
+          <div class="form-group"><label class="form-label">Category</label>
+            <select id="dailyCat">
+              <option>food / drinks</option>
+              <option>transport</option>
+              <option>child</option>
+              <option>house / home</option>
+              <option>personal care</option>
+              <option>airtime / data</option>
+              <option>health</option>
+              <option>other</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">&nbsp;</label><button class="btn btn-primary" style="width:100%" onclick="addDailyLog()"><i class="ti ti-plus"></i>Log</button></div>
+        </div>
+      </div>
+      <div id="dailyLogList" style="margin-top:8px;"></div>
+      <div class="total-line"><span>Today's total</span><span id="dailyTotalLabel">0 FCFA</span></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ WEEKLY ═══════════════════════════════════ -->
+  <div class="page" id="page-weekly">
+    <div class="page-header">
+      <div class="page-title">Weekly Plan</div>
+      <div class="page-subtitle">A rhythm that keeps you on track</div>
+    </div>
+    <div class="callout callout-blue"><i class="ti ti-coins"></i><div>Your weekly budget for extras (after saving + house fund): <strong>~9,656 FCFA per week</strong>. Market day on Monday: buy all food in bulk. Buying daily costs 30–40% more.</div></div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-calendar-week"></i>This week</div>
+      <div id="weekDayPlan"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-run"></i>Workout tracker this week</div>
+      <div class="week-grid" id="workoutWeek"></div>
+      <div style="font-size:12px;color:var(--ink3);margin-top:10px;">Click a day to mark workout done. 15 min stretch or 15 min home workout counts.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-checklist"></i>Weekly review checklist</div>
+      <div id="weeklyReview"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ NOTES ═══════════════════════════════════ -->
+  <div class="page" id="page-notes">
+    <div class="page-header">
+      <div class="page-title">Notes & Feelings</div>
+      <div class="page-subtitle">Write it out. Moving pain from chest to paper frees your mind.</div>
+    </div>
+
+    <div class="affirmation-box" onclick="nextAffirmation()" id="affirmBox">
+      <div class="affirmation-text" id="affirmText"></div>
+      <div class="affirmation-hint">tap for next</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-pencil"></i>Write a note</div>
+      <div class="form-group" style="margin-bottom:12px;"><label class="form-label">Your thoughts</label><textarea id="noteBody" placeholder="Today I felt... / I want to... / I am proud of myself for... / Tomorrow I will..."></textarea></div>
+      <div class="form-grid cols2">
+        <div class="form-group"><label class="form-label">Tag</label>
+          <select id="noteTag">
+            <option>💰 money thought</option>
+            <option>❤️ parenting moment</option>
+            <option>🌱 growth</option>
+            <option>😤 frustration</option>
+            <option>🎯 goal</option>
+            <option>✨ proud moment</option>
+            <option>📋 reminder</option>
+            <option>😔 hard day</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">&nbsp;</label><button class="btn btn-primary" style="width:100%" onclick="addNote()"><i class="ti ti-plus"></i>Save note</button></div>
+      </div>
+      <div id="notesList" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ GROWTH ═══════════════════════════════════ -->
+  <div class="page" id="page-growth">
+    <div class="page-header">
+      <div class="page-title">Personal Growth</div>
+      <div class="page-subtitle">You are not behind. You are building. Every day you try is a win.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-device-mobile-off"></i>Screen & TikTok addiction — break free</div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:var(--rose-light);"><i class="ti ti-clock-off" style="color:var(--rose)"></i></div>
+        <div class="growth-body"><div class="growth-title">Set a screen curfew</div><div class="growth-desc">No TikTok before 12pm and after 8pm. Put phone in another room. This is not punishment — it is self-respect. Your brain needs rest from constant stimulation.</div></div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:var(--accent-light);"><i class="ti ti-replace" style="color:var(--accent)"></i></div>
+        <div class="growth-body"><div class="growth-title">Replace — don't just stop</div><div class="growth-desc">You need background noise — that is okay. Replace TikTok with podcasts, Kotlin YouTube tutorials, or music. Same dopamine, different fuel. Same noise, different direction.</div></div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:var(--blue-light);"><i class="ti ti-sunrise" style="color:var(--blue)"></i></div>
+        <div class="growth-body"><div class="growth-title">Phone-free morning: first 30 minutes</div><div class="growth-desc">Before any screen — drink water, stretch, say one intention for the day. Even 10 minutes phone-free changes your entire morning mood and your energy for your child.</div></div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:var(--gold-light);"><i class="ti ti-writing" style="color:var(--gold)"></i></div>
+        <div class="growth-body"><div class="growth-title">Track your screen-free wins</div><div class="growth-desc">Every time you chose something else over TikTok — log it in Notes. Celebrate it. Your brain learns by noticing progress, not just failures.</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-mood-sad"></i>Depression & learning to sit with quiet</div>
+      <div class="callout callout-gold"><i class="ti ti-alert-circle"></i><div>If you feel very low for more than 2 weeks and cannot function — please tell someone. A pastor, a friend, a health worker at Bamenda Regional Hospital. Asking for help is not weakness. It is the bravest thing a mother can do.</div></div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:#F0E8FF;"><i class="ti ti-volume" style="color:#6A2B8A"></i></div>
+        <div class="growth-body"><div class="growth-title">Silence is not your enemy</div><div class="growth-desc">Needing noise is your nervous system protecting you — it learned noise = safe. Start with 2 minutes of quiet while making tea. Then 5. Slowly, your brain learns: silence is safe, not empty.</div></div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:var(--accent-light);"><i class="ti ti-walk" style="color:var(--accent)"></i></div>
+        <div class="growth-body"><div class="growth-title">Movement is medicine — free</div><div class="growth-desc">A 15-minute walk anywhere in Bamenda changes your brain chemistry. No gym. Just move. It sends your brain the message: "I am still alive and going." Do it daily.</div></div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:var(--teal-light);"><i class="ti ti-droplet" style="color:var(--teal)"></i></div>
+        <div class="growth-body"><div class="growth-title">3 things daily — tiny gratitude</div><div class="growth-desc">Each evening before bed, write 3 things from the day. Not big things. "My son laughed. I drank water. It didn't rain when I walked." Depression shrinks when gratitude grows.</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-run"></i>Flexibility & home workout — no gym, no money needed</div>
+      <div class="meal-block"><div class="meal-name">Morning stretch — 15 min (every day)</div><div class="meal-content">Neck rolls → shoulder circles → forward fold → hip opener (legs wide, lean side to side) → cat-cow on hands and knees → child's pose. Do it to music you like. A blanket on the floor is enough.</div></div>
+      <div class="meal-block"><div class="meal-name">Strength workout — 3× per week (15 min)</div><div class="meal-content">10 squats → 10 push-ups (knees on floor is fine) → 20-second plank → 10 lunges each leg. Repeat 2 rounds. Do it when your son does homework — you both work, together.</div></div>
+      <div class="meal-block"><div class="meal-name">Water first — always</div><div class="meal-content">Before any meal, drink one glass of water. Reduces emotional hunger, helps digestion, clears the mind. Costs nothing. Your body often sends "hungry" when it means "thirsty."</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-cash"></i>Survival & money skills</div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:var(--accent-light);"><i class="ti ti-device-mobile" style="color:var(--accent)"></i></div>
+        <div class="growth-body"><div class="growth-title">Mobile money discipline</div><div class="growth-desc">Open a second mobile money account. Name it "Future Me." Put your 20,000 FCFA savings there on salary day — before anything else. What you don't see easily, you don't spend easily.</div></div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:var(--gold-light);"><i class="ti ti-shopping-cart" style="color:var(--gold)"></i></div>
+        <div class="growth-body"><div class="growth-title">Market day discipline — Bamenda main market</div><div class="growth-desc">Buy all your week's food in one trip on Monday morning. Write your list before you go. Never shop when hungry. Buying daily costs 30–40% more than buying in bulk.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ SKILLS ═══════════════════════════════════ -->
+  <div class="page" id="page-skills">
+    <div class="page-header">
+      <div class="page-title">Learning: Kotlin & UI/UX</div>
+      <div class="page-subtitle">30 minutes a day. One skill. One direction. This changes your income.</div>
+    </div>
+
+    <div class="callout callout-green"><i class="ti ti-rocket"></i><div>Android development in Cameroon is growing fast. One freelance Android app can earn 50,000–300,000+ FCFA per project. You picked the right path. Start small. Build one app. Show it. Repeat.</div></div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-road"></i>Your learning roadmap</div>
+      <div id="skillRoadmap"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-calendar"></i>Daily 30-min study plan</div>
+      <div class="meal-block"><div class="meal-name">Month 1 — Kotlin basics</div><div class="meal-content">Variables, functions, if/else, loops, classes. Resource: "Kotlin for Beginners" by Coding with Mitch on YouTube. Do 1 small exercise per day. Don't understand everything — just keep going.</div></div>
+      <div class="meal-block"><div class="meal-name">Month 2 — Android basics</div><div class="meal-content">Android Studio, layouts, buttons, activities, navigation. Resource: Google's free "Android Basics with Compose" at developer.android.com.</div></div>
+      <div class="meal-block"><div class="meal-name">Month 3 — Build your first app</div><div class="meal-content">Build a simple expense tracker (like this one!). It does not have to be perfect — it has to be finished. Upload it to GitHub. That is your first portfolio piece.</div></div>
+      <div class="meal-block"><div class="meal-name">Month 4+ — Figma & UI/UX</div><div class="meal-content">Learn Figma (free). Design your app before you build it. Figma is the tool professional designers use worldwide. Free plan is enough to start.</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-checkbox"></i>My learning wins</div>
+      <div id="skillWins"></div>
+      <div class="add-panel" style="margin-top:12px;">
+        <div class="form-grid cols2">
+          <div class="form-group"><label class="form-label">What did you learn or finish today?</label><input type="text" id="skillWinInput" placeholder="e.g. finished Kotlin lesson 3, built my first button"></div>
+          <div class="form-group"><label class="form-label">&nbsp;</label><button class="btn btn-primary" style="width:100%" onclick="addSkillWin()"><i class="ti ti-plus"></i>Log win</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-award"></i>Free resources</div>
+      <div class="list-row"><div class="list-row-main"><div class="list-row-title">YouTube — "Kotlin for beginners"</div><div class="list-row-sub">Search: Coding with Mitch Kotlin · free</div></div></div>
+      <div class="list-row"><div class="list-row-main"><div class="list-row-title">developer.android.com</div><div class="list-row-sub">Android Basics with Compose — free official Google course</div></div></div>
+      <div class="list-row"><div class="list-row-main"><div class="list-row-title">figma.com</div><div class="list-row-sub">Free plan · industry standard UI/UX design tool</div></div></div>
+      <div class="list-row"><div class="list-row-main"><div class="list-row-title">github.com</div><div class="list-row-sub">Save all your code here — it becomes your public portfolio</div></div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ CHILD ═══════════════════════════════════ -->
+  <div class="page" id="page-child">
+    <div class="page-header">
+      <div class="page-title">My Son — 7 years old</div>
+      <div class="page-subtitle">Present beats perfect. Every time.</div>
+    </div>
+
+    <div class="callout callout-green"><i class="ti ti-heart"></i><div>A mother who shows up, tries, and loves — is already a great mother. You are doing that. Your son sees your love even when you can't see it yourself.</div></div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-apple"></i>Affordable weekly meal plan (Bamenda)</div>
+      <div class="meal-block"><div class="meal-name">Breakfast — every day, rotate</div><div class="meal-content">Boiled egg + bread · Corn porridge (akamu) + sugar · Groundnut porridge · Sweet plantain + groundnuts · Rice water + little milk. Goal: protein + carbs every morning. A fed brain learns better at school.</div></div>
+      <div class="meal-block"><div class="meal-name">Lunch — school days</div><div class="meal-content">Rice + beans + egg or small fish · Fufu + eru / vegetable soup · Plantains + beans. Pack water — no sweet drinks. Sugar drinks at school reduce attention and energy by afternoon.</div></div>
+      <div class="meal-block"><div class="meal-name">Dinner — light</div><div class="meal-content">Boiled yam or cocoyam + soup · Pasta + sardine + tomato sauce · Beans + fried plantain. Include vegetables in at least 2 meals every day.</div></div>
+      <div class="meal-block"><div class="meal-name">Snacks</div><div class="meal-content">Groundnuts (best brain food, very cheap) · Banana · Boiled corn · Bread. Avoid daily sachets of sweet water — water is always better for a 7-year-old brain.</div></div>
+      <div class="callout callout-teal" style="margin-top:12px;"><i class="ti ti-info-circle"></i><div>At 7 he needs: iron (beans, dark leafy veg like eru/ndole), protein (eggs, fish, groundnuts, beans), and complex carbs for energy. Groundnuts are one of the best and cheapest brain foods in Cameroon.</div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ PARENTING ═══════════════════════════════════ -->
+  <div class="page" id="page-parenting">
+    <div class="page-header">
+      <div class="page-title">Parenting</div>
+      <div class="page-subtitle">Small daily actions. Big lifetime impact.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-checklist"></i>Daily parenting checklist</div>
+      <div id="parentChecklist"></div>
+      <div class="add-panel" style="margin-top:12px;">
+        <div class="form-grid cols2">
+          <div class="form-group"><label class="form-label">Add your own task</label><input type="text" id="parentTaskInput" placeholder="e.g. help with homework 20 min"></div>
+          <div class="form-group"><label class="form-label">&nbsp;</label><button class="btn btn-primary" style="width:100%" onclick="addParentTask()"><i class="ti ti-plus"></i>Add</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-book"></i>How to raise a strong 7-year-old</div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:var(--teal-light);"><i class="ti ti-ear" style="color:var(--teal)"></i></div>
+        <div class="growth-body"><div class="growth-title">Listen, really listen</div><div class="growth-desc">When he talks, put your phone down. Look at his face. Respond. A child who feels heard grows up with confidence and emotional health. 5 minutes of full attention beats 2 hours of distracted presence.</div></div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:var(--blue-light);"><i class="ti ti-repeat" style="color:var(--blue)"></i></div>
+        <div class="growth-body"><div class="growth-title">Routine is safety for children</div><div class="growth-desc">Same wake time, meal times, bedtime. Children with predictable days feel safer and behave better. Start with bedtime: 8:30pm every night. This one change will transform your mornings.</div></div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:var(--gold-light);"><i class="ti ti-mood-smile" style="color:var(--gold)"></i></div>
+        <div class="growth-body"><div class="growth-title">Praise effort, not results</div><div class="growth-desc">Say "I saw how hard you tried" not just "you are smart." Children praised for effort become more resilient. They don't give up when things are hard — and things will be hard.</div></div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:var(--rose-light);"><i class="ti ti-shield" style="color:var(--rose)"></i></div>
+        <div class="growth-body"><div class="growth-title">Limits with love</div><div class="growth-desc">"No" is a complete sentence. But explain why: "No more screen because your brain needs rest to grow." Rules with reasons build respect, not resentment.</div></div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-icon" style="background:#F0E8FF;"><i class="ti ti-hand-finger" style="color:#6A2B8A"></i></div>
+        <div class="growth-body"><div class="growth-title">You are his first teacher</div><div class="growth-desc">He is always watching you. When you put your phone down, he learns to do the same. When you say sorry after a mistake, he learns accountability. You are already enough. Keep going.</div></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ── DATA (localStorage for persistence) ──
+const INCOME = 200000, FIXED = 141375;
+
+function load(k, def) {
+  try { const v = localStorage.getItem('mr_' + k); return v ? JSON.parse(v) : def; } catch { return def; }
+}
+function save(k, v) {
+  try { localStorage.setItem('mr_' + k, JSON.stringify(v)); } catch {}
+}
+
+let expenses = load('expenses', []);
+let dailyLogs = load('dailyLogs', []);
+let notes = load('notes', []);
+let parentTasks = load('parentTasks', [
+  {text: "Say 'I love you' and give a hug", done: false},
+  {text: "Sit with him during homework (10 min)", done: false},
+  {text: "Eat one meal together without phones", done: false},
+  {text: "Ask: 'What was the best part of your day?'", done: false},
+  {text: "Read or tell a story at bedtime", done: false},
+  {text: "Check that he drank enough water today", done: false},
+]);
+let skillWins = load('skillWins', []);
+let workoutDone = load('workoutDone', [false,false,false,false,false,false,false]);
+let weekReview = load('weekReview', [false,false,false,false,false]);
+let affirmIdx = 0;
+
+const affirmations = [
+  "You are not behind. You are building something real, one day at a time.",
+  "A mother who tries is already a great mother. Your son sees your love.",
+  "You chose to learn Kotlin. That is courage. Most people only dream — you decided.",
+  "You are allowed to rest. Rest is not giving up — it is refueling for tomorrow.",
+  "Managing 200,000 FCFA well is a skill. You are learning it. Be patient with yourself.",
+  "Every FCFA you save is a message to your future self: I am coming to help you.",
+  "You do not need a perfect life to be happy. You need a direction. You have one.",
+  "Being present for your son for 10 minutes is worth more than any gift.",
+  "Depression lies. It says you are stuck. You are not stuck — you are growing.",
+  "Every woman who changed her life started from exactly where you are right now.",
+  "Your noise habit is not weakness — it is your nervous system protecting you. Be gentle as you heal.",
+  "You are in your 30s and still learning. That is strength. Many people stop growing at 25.",
+  "Your son is watching the bravest woman he knows — his mother.",
+  "Saving 20,000 FCFA this month is 240,000 FCFA in a year. That is a fridge, a bed, and a future.",
+];
+
+const roadmap = [
+  {n:'1', title:'Kotlin basics', desc:'Variables, functions, if/else, loops, classes', status:'Start here', color:'var(--accent-light)', tc:'var(--accent)'},
+  {n:'2', title:'Android Studio setup', desc:'Install, create first project, run on emulator', status:'Month 1', color:'var(--blue-light)', tc:'var(--blue)'},
+  {n:'3', title:'Android layouts', desc:'XML layouts, buttons, text views, navigation', status:'Month 2', color:'#F0E8FF', tc:'#6A2B8A'},
+  {n:'4', title:'Build your first app', desc:'A simple expense tracker or to-do list', status:'Month 3', color:'var(--rose-light)', tc:'var(--rose)'},
+  {n:'5', title:'Figma & UI/UX', desc:'Design before you code. Create mockups, learn design principles', status:'Month 4', color:'var(--gold-light)', tc:'var(--gold)'},
+  {n:'6', title:'Polish & publish', desc:'GitHub portfolio + share on LinkedIn + freelance', status:'Month 5+', color:'var(--teal-light)', tc:'var(--teal)'},
+];
+
+const weekDays = [
+  {day:'Monday', plan:'Market day: buy all week food in bulk from Bamenda main market. Budget ~12,500 FCFA for family food. Make a list before you go. Never shop hungry.'},
+  {day:'Tuesday', plan:'Low-spend day. Cook from what you bought. Study 30 min Kotlin. No TikTok before noon.'},
+  {day:'Wednesday', plan:'Mid-week check: count your daily log totals. Are you on track? Child reading or activity time after school.'},
+  {day:'Thursday', plan:'Low-spend day. Meal prep for remaining days. 20 min stretch. No phone before bed tonight.'},
+  {day:'Friday', plan:'Weekly review: add up what you spent. Compare to your plan. Did you save? Reward yourself with rest — not shopping.'},
+  {day:'Saturday', plan:"Child day: free or low-cost activities. Walk in Bamenda, read together, play outside, cook together. Make memories that don't cost money."},
+  {day:'Sunday', plan:'Rest, reflect, plan next week. Write 3 things you are grateful for. Sleep before 10pm.'},
+];
+
+const weekReviewItems = [
+  'I saved my 20,000 FCFA this week',
+  'I put money in the house fund',
+  'I did not make any emotional purchases',
+  'I spent quality time with my son (phone away)',
+  'I studied or practiced my skills at least 3 days',
+];
+
+function fmt(n) { return Math.round(n).toLocaleString(); }
+function timeNow() { return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); }
+function dateNow() { return new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}); }
+
+// ── NAVIGATION ──
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  window.scrollTo(0,0);
+  if(window.innerWidth <= 768) closeSidebar();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// ── BUDGET ──
+function addExpense() {
+  const name = document.getElementById('expName').value.trim();
+  const amt = parseFloat(document.getElementById('expAmt').value);
+  const type = document.getElementById('expType').value;
+  if(!name || isNaN(amt) || amt <= 0) return;
+  expenses.push({name, amt, type, time: timeNow()});
+  save('expenses', expenses);
+  document.getElementById('expName').value = '';
+  document.getElementById('expAmt').value = '';
+  renderExpenses();
+}
+
+function deleteExpense(i) { expenses.splice(i,1); save('expenses', expenses); renderExpenses(); }
+
+function renderExpenses() {
+  const c = document.getElementById('expenseList');
+  const badgeMap = {planned:'badge-planned', unplanned:'badge-unplanned', emergency:'badge-emergency', emotional:'badge-emotional'};
+  c.innerHTML = expenses.map((e,i) => `
+    <div class="list-row">
+      <div class="list-row-main">
+        <div class="list-row-title">${e.name}</div>
+        <div class="list-row-sub">${e.time} · <span class="badge ${badgeMap[e.type]||'badge-planned'}">${e.type}</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="list-row-amt">${fmt(e.amt)} FCFA</div>
+        <button class="btn btn-danger btn-icon btn-sm" onclick="deleteExpense(${i})"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`).join('') || '<div style="padding:10px 0;font-size:13px;color:var(--ink3);">No extra expenses logged yet.</div>';
+
+  const total = expenses.reduce((s,e)=>s+e.amt, 0);
+  document.getElementById('totalExtraLabel').textContent = fmt(total) + ' FCFA';
+  document.getElementById('statExtra').textContent = fmt(total);
+  const pct = Math.min(100, Math.round((FIXED + total) / INCOME * 100));
+  document.getElementById('budgetPctLabel').textContent = pct + '%';
+  const bar = document.getElementById('budgetBar');
+  bar.style.width = pct + '%';
+  bar.className = 'prog-fill ' + (pct < 80 ? 'fill-green' : pct < 95 ? 'fill-gold' : 'fill-red');
+  const free = INCOME - FIXED - total;
+  document.getElementById('statFree').textContent = fmt(Math.max(0, free));
+  document.getElementById('statFree').className = 'stat-value ' + (free > 20000 ? 'c-green' : free > 0 ? 'c-gold' : 'c-red');
+}
+
+// ── DAILY LOG ──
+function addDailyLog() {
+  const item = document.getElementById('dailyItem').value.trim();
+  const amt = parseFloat(document.getElementById('dailyAmt').value);
+  const cat = document.getElementById('dailyCat').value;
+  if(!item || isNaN(amt) || amt <= 0) return;
+  dailyLogs.push({item, amt, cat, time: timeNow()});
+  save('dailyLogs', dailyLogs);
+  document.getElementById('dailyItem').value = '';
+  document.getElementById('dailyAmt').value = '';
+  renderDailyLog();
+}
+
+function deleteDailyLog(i) { dailyLogs.splice(i,1); save('dailyLogs', dailyLogs); renderDailyLog(); }
+
+function renderDailyLog() {
+  const c = document.getElementById('dailyLogList');
+  const catColors = {'food / drinks':'badge-planned','transport':'badge-unplanned','child':'badge-emotional','house / home':'badge-fixed','personal care':'badge-saving','airtime / data':'badge-unplanned','health':'badge-emergency','other':'badge-unplanned'};
+  c.innerHTML = dailyLogs.map((e,i) => `
+    <div class="list-row">
+      <div class="list-row-main">
+        <div class="list-row-title">${e.item}</div>
+        <div class="list-row-sub">${e.time} · <span class="badge ${catColors[e.cat]||'badge-unplanned'}">${e.cat}</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="list-row-amt">${fmt(e.amt)} FCFA</div>
+        <button class="btn btn-danger btn-icon btn-sm" onclick="deleteDailyLog(${i})"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`).join('') || '<div style="padding:10px 0;font-size:13px;color:var(--ink3);">Nothing logged yet today.</div>';
+  const total = dailyLogs.reduce((s,e)=>s+e.amt,0);
+  document.getElementById('dailyTotalLabel').textContent = fmt(total) + ' FCFA';
+}
+
+// ── WEEKLY ──
+function renderWeekPlan() {
+  const today = (new Date().getDay() + 6) % 7;
+  document.getElementById('weekDayPlan').innerHTML = weekDays.map((d,i) => `
+    <div class="list-row" style="${i===today?'background:var(--accent-light);border-radius:8px;padding:12px;margin:-12px -4px;':''}">
+      <div class="list-row-main">
+        <div class="list-row-title" style="${i===today?'font-weight:600;color:var(--accent);':''}"><i class="ti ti-${i===today?'star':'calendar'}" style="margin-right:6px;font-size:14px;opacity:0.6;"></i>${d.day}${i===today?' — today':''}</div>
+        <div class="list-row-sub" style="margin-top:4px;">${d.plan}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderWorkoutWeek() {
+  const today = (new Date().getDay() + 6) % 7;
+  const names = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  document.getElementById('workoutWeek').innerHTML = names.map((d,i) => `
+    <div class="day-cell ${i===today?'today':''} ${workoutDone[i]?'done-day':''}" onclick="toggleWorkout(${i})">
+      <div class="day-name">${d}</div>
+      <div class="day-check">${workoutDone[i]?'<i class="ti ti-check" style="color:var(--accent);font-size:18px;"></i>':'<i class="ti ti-circle" style="opacity:0.2;font-size:18px;"></i>'}</div>
+    </div>`).join('');
+}
+
+function toggleWorkout(i) { workoutDone[i] = !workoutDone[i]; save('workoutDone', workoutDone); renderWorkoutWeek(); }
+
+function renderWeeklyReview() {
+  document.getElementById('weeklyReview').innerHTML = weekReviewItems.map((item,i) => `
+    <div class="check-item" onclick="toggleReview(${i})">
+      <div class="checkmark ${weekReview[i]?'checked':''}"></div>
+      <div class="check-label ${weekReview[i]?'done':''}">${item}</div>
+    </div>`).join('');
+}
+
+function toggleReview(i) { weekReview[i] = !weekReview[i]; save('weekReview', weekReview); renderWeeklyReview(); }
+
+// ── NOTES ──
+function nextAffirmation() {
+  affirmIdx = (affirmIdx + 1) % affirmations.length;
+  document.getElementById('affirmText').textContent = affirmations[affirmIdx];
+}
+
+function addNote() {
+  const body = document.getElementById('noteBody').value.trim();
+  const tag = document.getElementById('noteTag').value;
+  if(!body) return;
+  notes.unshift({body, tag, time: dateNow()});
+  save('notes', notes);
+  document.getElementById('noteBody').value = '';
+  renderNotes();
+}
+
+function deleteNote(i) { notes.splice(i,1); save('notes', notes); renderNotes(); }
+
+function renderNotes() {
+  const c = document.getElementById('notesList');
+  c.innerHTML = notes.map((n,i) => `
+    <div class="note-item">
+      <div class="note-meta">${n.tag} · ${n.time}</div>
+      <div class="note-body">${n.body.replace(/\n/g,'<br>')}</div>
+      <button class="note-del" onclick="deleteNote(${i})"><i class="ti ti-x"></i></button>
+    </div>`).join('') || '<div style="font-size:13px;color:var(--ink3);padding:8px 0;">No notes yet. Write your first thought above.</div>';
+}
+
+// ── PARENTING ──
+function renderParentChecklist() {
+  document.getElementById('parentChecklist').innerHTML = parentTasks.map((t,i) => `
+    <div class="check-item" onclick="toggleParent(${i})">
+      <div class="checkmark ${t.done?'checked':''}"></div>
+      <div class="check-label ${t.done?'done':''}">${t.text}</div>
+    </div>`).join('');
+}
+
+function toggleParent(i) { parentTasks[i].done = !parentTasks[i].done; save('parentTasks', parentTasks); renderParentChecklist(); }
+
+function addParentTask() {
+  const v = document.getElementById('parentTaskInput').value.trim();
+  if(!v) return;
+  parentTasks.push({text: v, done: false});
+  save('parentTasks', parentTasks);
+  document.getElementById('parentTaskInput').value = '';
+  renderParentChecklist();
+}
+
+// ── SKILLS ──
+function renderSkillRoadmap() {
+  document.getElementById('skillRoadmap').innerHTML = roadmap.map(r => `
+    <div class="roadmap-item">
+      <div class="step-num">${r.n}</div>
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+          <span style="font-weight:600;font-size:14px;">${r.title}</span>
+          <span class="badge" style="background:${r.color};color:${r.tc};font-size:10px;">${r.status}</span>
+        </div>
+        <div style="font-size:13px;color:var(--ink2);">${r.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderSkillWins() {
+  const c = document.getElementById('skillWins');
+  c.innerHTML = skillWins.map((w,i) => `
+    <div class="list-row">
+      <div class="list-row-main">
+        <div class="list-row-title"><i class="ti ti-check" style="color:var(--accent);margin-right:6px;font-size:14px;"></i>${w.text}</div>
+        <div class="list-row-sub">${w.time}</div>
+      </div>
+      <button class="btn btn-danger btn-icon btn-sm" onclick="deleteSkillWin(${i})"><i class="ti ti-trash"></i></button>
+    </div>`).join('') || '<div style="font-size:13px;color:var(--ink3);padding:8px 0;">Log your first learning win below!</div>';
+}
+
+function addSkillWin() {
+  const v = document.getElementById('skillWinInput').value.trim();
+  if(!v) return;
+  skillWins.unshift({text: v, time: dateNow()});
+  save('skillWins', skillWins);
+  document.getElementById('skillWinInput').value = '';
+  renderSkillWins();
+}
+
+function deleteSkillWin(i) { skillWins.splice(i,1); save('skillWins', skillWins); renderSkillWins(); }
+
+// ── DATE ──
+function setDate() {
+  const d = new Date();
+  document.getElementById('sidebarDate').textContent = d.toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'long'});
+}
+
+// ── INIT ──
+document.getElementById('affirmText').textContent = affirmations[Math.floor(Math.random() * affirmations.length)];
+renderExpenses();
+renderDailyLog();
+renderWeekPlan();
+renderWorkoutWeek();
+renderWeeklyReview();
+renderNotes();
+renderParentChecklist();
+renderSkillRoadmap();
+renderSkillWins();
+setDate();
+</script>
+</body>
+</html>
